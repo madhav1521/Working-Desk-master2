@@ -1,0 +1,586 @@
+{
+  "user": [
+    {
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "Email": "abc@gmail.com",
+      "Mobile": "1234567890",
+      "Password": "qwert",
+      "ConfirmPassword": "qwert",
+      "userTypeId": 0,
+      "id": 1,
+      "usertype": "customer",
+      "status": "Active",
+      "preferredLangauge": "Gujarati",
+      "DOB": "14-03-2002"
+    },
+    {
+      "FirstName": "mahesh",
+      "LastName": "patel",
+      "Email": "pqr@yopmail.com",
+      "Mobile": "9876543210",
+      "Password": "qwert",
+      "ConfirmPassword": "qwert",
+      "userTypeId": 1,
+      "usertype": "service provider",
+      "id": 2,
+      "Gender": "male",
+      "StreetName": "Vrundavan Society",
+      "HouseNumber": "25",
+      "PostalCode": "395010",
+      "status": "Active",
+      "City": "Palitana",
+      "MobileNumber": "1234567890",
+      "DOB": "02-06-2001",
+      "avtar": "a1",
+      "c": "abc@gmail.com"
+    },
+    {
+      "FirstName": "haresh",
+      "LastName": "sharma",
+      "Email": "pqr@gmail.com",
+      "Mobile": "9876543210",
+      "usertype": "service provider",
+      "Password": "qwert",
+      "status": "Inactive",
+      "ConfirmPassword": "09876",
+      "userTypeId": 1,
+      "id": 3
+    },
+    {
+      "FirstName": "admin",
+      "LastName": "admin",
+      "Email": "xyz@gmail.com",
+      "Mobile": "9876543210",
+      "Password": "qwert",
+      "userTypeId": 2,
+      "id": 4
+    },
+    {
+      "FirstName": "Ramesh",
+      "LastName": "Gandhi",
+      "Email": "ramesh1234@gmail.com",
+      "Mobile": "789845651232",
+      "usertype": "service provider",
+      "Password": "ritul",
+      "ConfirmPassword": "ritul",
+      "status": "Inactive",
+      "userTypeId": 1,
+      "id": 5
+    },
+    {
+      "FirstName": "mohan1",
+      "LastName": "sharma",
+      "Email": "mohan@gmail.com",
+      "Mobile": "4585967423",
+      "Password": "qwert",
+      "ConfirmPassword": "qwert",
+      "status": "Active",
+      "userTypeId": 1,
+      "id": 6
+    },
+    {
+      "FirstName": "ram",
+      "LastName": "patoliya",
+      "Email": "ram@gmail.com",
+      "Mobile": "7898456532",
+      "Password": "asdfg",
+      "ConfirmPassword": "asdfg",
+      "userTypeId": 0,
+      "status": "Active",
+      "id": 7
+    },
+    {
+      "FirstName": "Madhav",
+      "LastName": "Jajal",
+      "Email": "madhavjajal1521@gmail.com",
+      "Mobile": "+919408866398",
+      "Password": "123",
+      "ConfirmPassword": "123",
+      "userTypeId": 0,
+      "status": "Active",
+      "id": 8
+    },
+    {
+      "FirstName": "Madhav",
+      "LastName": "Jajal",
+      "Email": "madhavjajal1509@gmail.com",
+      "Mobile": "+919408866398",
+      "Password": "147",
+      "ConfirmPassword": "147",
+      "userTypeId": 0,
+      "status": "Active",
+      "id": 9
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 10
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 11
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 12
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 13
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 14
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 15
+    },
+    {
+      "Email": "madhavjajal1509@gmail.com",
+      "id": 16
+    },
+    {
+      "Email": "madhavjajal1521@gmail.com",
+      "id": 17
+    },
+    {
+      "FirstName": "uttam",
+      "LastName": "uttam",
+      "Email": "uttam@gmail.com",
+      "Mobile": "9408866398",
+      "Password": "123123",
+      "ConfirmPassword": "123123",
+      "userTypeId": 0,
+      "status": "Active",
+      "id": 18
+    },
+    {
+      "FirstName": "yash",
+      "LastName": "yash",
+      "Email": "yash@gmail.com",
+      "Mobile": "9408866398",
+      "Password": "143143",
+      "ConfirmPassword": "143143",
+      "userTypeId": 0,
+      "status": "Active",
+      "id": 19,
+      "preferredLangauge": "Hindi"
+    },
+    {
+      "FirstName": "madhav",
+      "LastName": "jajal",
+      "Email": "madhav@gmail.com",
+      "Mobile": "9408866398",
+      "Password": "123",
+      "ConfirmPassword": "123",
+      "status": "Inactive",
+      "userTypeId": 1,
+      "id": 20
+    },
+    {
+      "FirstName": "madhav",
+      "LastName": "jajal",
+      "Email": "abc@abc",
+      "Mobile": "9408866398",
+      "Password": "141",
+      "ConfirmPassword": "141",
+      "status": "Active",
+      "userTypeId": 1,
+      "id": 21,
+      "DOB": "02-05-2023",
+      "preferredLangauge": "Gujarati",
+      "Gender": "male",
+      "avtar": "a1",
+      "StreetName": "street",
+      "HouseNumber": "17",
+      "PostalCode": "364290",
+      "City": "mahuva",
+      "MobileNumber": "9408866398"
+    }
+  ],
+  "postalCode": [
+    {
+      "Postalcode": 364270
+    },
+    {
+      "Postalcode": 395006
+    },
+    {
+      "Postalcode": 364270
+    },
+    {
+      "Postalcode": 567890
+    },
+    {
+      "Postalcode": 395010
+    },
+    {
+      "Postalcode": 395006
+    }
+  ],
+  "Bookservice": [
+    {
+      "Rooms": 1,
+      "Bath": 1,
+      "Date": "10-04-2022",
+      "Time": "6:09 PM",
+      "ServiceHours": 3,
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": false,
+        "Inside oven": false,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "axx",
+      "ServiceId": 283061,
+      "ServiceAddress": "B-263,Tirupati Society,Surat,395010,Mobile:8511417122",
+      "Email": "abc@gmail.com",
+      "Mobile": "8511417122",
+      "status": "Completed",
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "datetime": "2022-04-10T12:39:18.000Z",
+      "Totaltime": 3.5,
+      "Payment": 70,
+      "EffPeyment": 56,
+      "Pet": true,
+      "userId": 1,
+      "id": 1,
+      "SPemail": "pqr@gmail.com",
+      "SPname": "mahesh patel",
+      "Rating": 1,
+      "SPcommnet": "",
+      "avtar": "a1"
+    },
+    {
+      "Rooms": 2,
+      "Bath": 2,
+      "Date": "11-04-2022",
+      "Time": "6:10 PM",
+      "ServiceHours": 4,
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": false,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "",
+      "ServiceId": 137277,
+      "ServiceAddress": "B-63,Yoginagar society,surat,395010,Mobile:7485963214",
+      "Email": "abc@gmail.com",
+      "Mobile": "7485963214",
+      "status": "Cancelled",
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "datetime": "2022-04-11T12:40:03.000Z",
+      "Totaltime": 5,
+      "Payment": 100,
+      "EffPeyment": 80,
+      "Pet": false,
+      "userId": 1,
+      "id": 2
+    },
+    {
+      "Rooms": 3,
+      "Bath": 3,
+      "Date": "30-04-2022",
+      "Time": "9:26 PM",
+      "ServiceHours": "3",
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": true,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "",
+      "ServiceId": 764828,
+      "ServiceAddress": "50,AnandDhara,Surat,395010,Mobile:8511526398",
+      "Email": "abc@gmail.com",
+      "Mobile": "8511526398",
+      "status": "Accepted",
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "datetime": "2022-04-30T15:56:50.000Z",
+      "Totaltime": 4.5,
+      "Payment": 90,
+      "EffPeyment": 72,
+      "Pet": false,
+      "userId": 1,
+      "id": 3,
+      "SPemail": "pqr@gmail.com",
+      "SPname": "mahesh patel"
+    },
+    {
+      "Rooms": 4,
+      "Bath": 4,
+      "Date": "20-04-2022",
+      "Time": "9:26 PM",
+      "ServiceHours": 6,
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": true,
+        "Laundry wash & dry": true,
+        "Interior windows": false
+      },
+      "Comments": "",
+      "ServiceId": 223277,
+      "ServiceAddress": "B-263,Tirupati Society,Surat,395010,Mobile:8511417122",
+      "Email": "abc@gmail.com",
+      "Mobile": "8511417122",
+      "status": "Cancelled",
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "datetime": "2022-04-20T15:56:50.000Z",
+      "Totaltime": 8,
+      "Payment": 160,
+      "EffPeyment": 128,
+      "Pet": true,
+      "userId": 1,
+      "id": 4
+    },
+    {
+      "Rooms": 4,
+      "Bath": 2,
+      "Date": "15-04-2022",
+      "Time": "9:26 PM",
+      "ServiceHours": 5,
+      "ExtraService": {
+        "Inside cabinets": false,
+        "Inside fridge": false,
+        "Inside oven": false,
+        "Laundry wash & dry": true,
+        "Interior windows": true
+      },
+      "Comments": "",
+      "ServiceId": 200769,
+      "ServiceAddress": "B-263,Tirupati Society,Surat,395010,Mobile:8511417122",
+      "Email": "abc@gmail.com",
+      "Mobile": "8511417122",
+      "status": "Cancelled",
+      "FirstName": "Ritul",
+      "LastName": "Bathani",
+      "datetime": "2022-04-15T15:56:50.000Z",
+      "Totaltime": 6,
+      "Payment": 120,
+      "EffPeyment": 96,
+      "Pet": true,
+      "userId": 1,
+      "id": 5
+    },
+    {
+      "Rooms": 2,
+      "Bath": 2,
+      "Date": "29-04-2022",
+      "Time": "10:11 AM",
+      "ServiceHours": 5,
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": false,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "welcome",
+      "ServiceId": 480214,
+      "ServiceAddress": "23,yogidhara,surat,395010,Mobile:7898456532",
+      "Email": "ram@gmail.com",
+      "Mobile": "7898456532",
+      "status": "Completed",
+      "FirstName": "ram",
+      "LastName": "patoliya",
+      "datetime": "2022-04-29T04:41:34.000Z",
+      "Totaltime": 6,
+      "Payment": 120,
+      "EffPeyment": 96,
+      "Pet": true,
+      "userId": 7,
+      "id": 7,
+      "SPemail": "mohan@gmail.com",
+      "SPname": "mohan sharma",
+      "Rating": 4,
+      "SPcommnet": "good"
+    },
+    {
+      "Rooms": "0",
+      "Bath": "0",
+      "Date": "30-04-2022",
+      "Time": "10:28 AM",
+      "ServiceHours": 6,
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": false,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "",
+      "ServiceId": 307446,
+      "ServiceAddress": "23,yogidhara,surat,395010,Mobile:7898456532",
+      "Email": "ram@gmail.com",
+      "Mobile": "7898456532",
+      "status": "Accepted",
+      "FirstName": "ram",
+      "LastName": "patoliya",
+      "datetime": "2022-04-30T04:58:23.000Z",
+      "Totaltime": 7,
+      "Payment": 140,
+      "EffPeyment": 112,
+      "Pet": true,
+      "userId": 7,
+      "id": 8,
+      "SPemail": "mohan@gmail.com",
+      "SPname": "mohan sharma",
+      "EMPNotes": "qw",
+      "rescheduleservice": "qw"
+    },
+    {
+      "Rooms": "0",
+      "Bath": "0",
+      "Date": "22-08-2021",
+      "Time": "11:11 PM",
+      "ServiceHours": "3",
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": false,
+        "Laundry wash & dry": false,
+        "Interior windows": false
+      },
+      "Comments": "",
+      "ServiceId": 570953,
+      "ServiceAddress": "50,AnandDhara,Surat,395010,Mobile:8511526398",
+      "Email": "abc@gmail.com",
+      "Mobile": "8511526398",
+      "status": "",
+      "FirstName": "Ritul",
+      "Postalcode": "395010",
+      "LastName": "Bathani",
+      "datetime": null,
+      "Totaltime": 4,
+      "Payment": 80,
+      "EffPeyment": 64,
+      "Pet": true,
+      "userId": 1,
+      "id": 9
+    },
+    {
+      "Rooms": 1,
+      "Bath": 2,
+      "Date": "04-05-2023",
+      "Time": "10:43",
+      "ServiceHours": "3",
+      "ExtraService": {
+        "Inside cabinets": true,
+        "Inside fridge": true,
+        "Inside oven": true,
+        "Laundry wash & dry": true,
+        "Interior windows": true
+      },
+      "Comments": "do it faster",
+      "ServiceId": 588090,
+      "ServiceAddress": "15,bopal,bopal gam,395010,Mobile:987654321",
+      "Email": "yash@gmail.com",
+      "Mobile": ":987654321",
+      "status": "",
+      "FirstName": "yash",
+      "LastName": "yash",
+      "datetime": "2023-05-04T05:13:09.000Z",
+      "Postalcode": "395010",
+      "Totaltime": 2.5,
+      "Payment": 50,
+      "EffPeyment": 40,
+      "Pet": true,
+      "userId": 19,
+      "id": 10
+    }
+  ],
+  "Address": [
+    {
+      "StreetName": "Tirupati Society",
+      "HouseNumber": "B-263",
+      "PostalCode": "395010",
+      "City": "Surat",
+      "MobileNumber": "8511417122",
+      "userTypeId": 1,
+      "id": 1,
+      "userId": 1
+    },
+    {
+      "StreetName": "sp",
+      "HouseNumber": "7",
+      "PostalCode": "395010",
+      "City": "anand",
+      "MobileNumber": "8511416385",
+      "userId": 2,
+      "id": 6
+    },
+    {
+      "StreetName": "s",
+      "HouseNumber": "s",
+      "PostalCode": "395010",
+      "City": "s",
+      "MobileNumber": "1",
+      "userId": 2,
+      "id": 8
+    },
+    {
+      "StreetName": "Yoginagar society",
+      "HouseNumber": "B-63",
+      "PostalCode": "395010",
+      "City": "surat",
+      "MobileNumber": "7485963214",
+      "userId": 1,
+      "id": 9
+    },
+    {
+      "StreetName": "AnandDhara",
+      "HouseNumber": "50",
+      "PostalCode": "395010",
+      "City": "Surat",
+      "MobileNumber": "8511526398",
+      "userId": 1,
+      "id": 10
+    },
+    {
+      "StreetName": "yogidhara",
+      "HouseNumber": "23",
+      "PostalCode": "395010",
+      "City": "surat",
+      "MobileNumber": "7898456532",
+      "userId": 7,
+      "id": 11
+    },
+    {
+      "StreetName": "bopal",
+      "HouseNumber": "15",
+      "PostalCode": "395010",
+      "City": "bopal gam",
+      "MobileNumber": "987654321",
+      "userId": 19,
+      "id": 12
+    },
+    {
+      "StreetName": "bopal",
+      "HouseNumber": "15",
+      "PostalCode": "395010",
+      "City": "bopal gam",
+      "MobileNumber": "987654321",
+      "userId": 19,
+      "id": 13
+    },
+    {
+      "StreetName": "bopal",
+      "HouseNumber": "15",
+      "PostalCode": "395010",
+      "City": "bopal gam",
+      "MobileNumber": "987654321",
+      "userId": 19,
+      "id": 14
+    }
+  ]
+}

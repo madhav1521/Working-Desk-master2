@@ -1,0 +1,104 @@
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import './App.css';
+import Homepage from './pages/homepage';
+import Faqpage from './pages/faq';
+import Pricespage from './pages/prices';
+import Contactpage from './pages/contact';
+import Aboutpage from './pages/about';
+import BecomeAPropage from './pages/become-a-pro';
+import Upcoming from './pages/upcoming_service';
+import History from './pages/Servicehistory';
+import Umanagement from './pages/user-management';
+import ServiceRequest from './pages/servicerequest';
+import Bookservicepage from './pages/book-service';
+import UserRegistration from './pages/user-registration';
+import ProtectedRoutes from './components/ProtectedRoutes';
+
+function App() {
+  const theme = createTheme({
+   
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 576,
+        md: 768,
+        lg: 992,
+        xl: 1200
+      },
+      components: {
+        MuiButtonBase: {
+          defaultProps: {
+            disableRipple: true
+          },
+        },
+      },
+    }
+   
+  });
+
+
+  const [access,Setaccess]=useState({
+    customer:false,
+    serviceP:false,
+    admin:false
+ })
+
+
+ useEffect (()=>{
+  if(localStorage.getItem('user') != null)
+  {
+      let user=JSON.parse(localStorage.getItem('user')|| '{}')
+      if(user.userTypeId==0)
+      {
+        Setaccess({...access,customer:true});
+        // setcheckboxdata({ ...checkboxdata,[event.target.name]:event.target.checked});
+      }
+      else if(user.userTypeId==1){
+        Setaccess({...access,serviceP:true});
+      }
+      else{
+        Setaccess({...access,admin:true});
+      }
+  }
+ })
+
+
+    
+ 
+
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Switch>
+            {/* <Route path="/subpage2" component={Subpage2}></Route>
+            <Route path="/subpage" component={Subpage}></Route> */}
+             <Route path="/faq" component={Faqpage}></Route>
+             <Route path="/prices" component={Pricespage}></Route>
+             <Route path="/contact" component={Contactpage}></Route>
+             <Route path="/about" component={Aboutpage}></Route>
+             <Route path="/pro" component={BecomeAPropage}></Route>
+
+             {/* <Route path="/upcoming" component={Upcoming}></Route> */}
+             <ProtectedRoutes path="/upcoming" component={Upcoming} auth={access.serviceP}/>
+             {/* <Route path="/history" component={History}></Route> */}
+             <ProtectedRoutes path="/history" component={History} auth={access.customer}/>
+             <Route path="/management" component={Umanagement}></Route>
+
+             {/* <Route path="/srequest" component={ServiceRequest}></Route> */}
+             <ProtectedRoutes path="/srequest" component={ServiceRequest} auth={access.admin}/>
+             <Route path="/bookservice" component={Bookservicepage}></Route>
+             <Route path="/homepage" component={Homepage}></Route>
+             <Route path="/uregistration" component={UserRegistration}></Route>
+             
+            <Route path="/" exact component={Homepage}></Route>
+          </Switch>
+        </BrowserRouter>
+      </ThemeProvider>
+    </>
+  );
+}
+
+export default App;
