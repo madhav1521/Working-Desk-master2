@@ -197,6 +197,17 @@
       "PostalCode": "364290",
       "City": "mahuva",
       "MobileNumber": "9408866398"
+    },
+    {
+      "FirstName": "uttam",
+      "LastName": "uttam",
+      "Email": "uttam@gmail.com",
+      "Mobile": "uttam@gmail.com",
+      "Password": "123123",
+      "ConfirmPassword": "123123",
+      "status": "Active",
+      "userTypeId": 1,
+      "id": 22
     }
   ],
   "postalCode": [
