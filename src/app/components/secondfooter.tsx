@@ -1,39 +1,51 @@
-import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
-import {footerFB,footerlogo,footerinsta} from "../assets/images"
-const useStyles = makeStyles({
-    
-    content: {
-        fontSize:"16px",
-        color:"#565656",
-        margin:"0 0 10px 0"
-    }
-  });
+import { footerFB, footerlogo, footerinsta } from "../assets/images";
+
 function SecondFooter() {
-    const Style = useStyles();
     return (
         <>
-            <div className="footer-top">
-                <img src={footerlogo} className="footerimg" alt="logo"/>
-                <div className="footerlink">
-                    <Link to="/homepage">HOME</Link>
-                    <Link to="/about">ABOUT</Link>
-                    <Link to="/">TESTIMONIALS</Link>
-                    <Link to="/faq">FAQS</Link>
-                    <Link to="">INSURANCE POLICY</Link>
-                    <Link to="/">IMPRESSUM</Link>
+            <footer className="footer-wrapper">
+                <div className="footer-top">
+                    <div className="footer-brand">
+                        <img src={footerlogo} className="footerimg" alt="logo" />
+                        <p className="footer-tagline">Your trusted home service partner</p>
+                    </div>
+
+                    <div className="footer-nav">
+                        <h4 className="footer-nav-title">Quick Links</h4>
+                        <nav className="footerlink">
+                            <Link to="/homepage">Home</Link>
+                            <Link to="/about">About</Link>
+                            <Link to="/faq">FAQs</Link>
+                            <Link to="/prices">Prices</Link>
+                            <Link to="/contact">Contact</Link>
+                        </nav>
+                    </div>
+
+                    <div className="footer-social-section">
+                        <h4 className="footer-nav-title">Follow Us</h4>
+                        <div className="footer-icons">
+                            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">
+                                <img src={footerFB} alt="Facebook" />
+                            </a>
+                            <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">
+                                <img src={footerinsta} alt="Instagram" />
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div className="footer-icons">
-                    <img src={footerFB} alt="logo"/>
-                    <img src={footerinsta} alt="logo"/>
+
+                <div className="footer-bottom">
+                    <p>
+                        &copy; {new Date().getFullYear()} Helperland. All rights reserved.
+                    </p>
+                    <div className="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span className="footer-divider">|</span>
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
                 </div>
-            </div>
-            {/* <hr className="footer-separator"></hr> */}
-            <div className="faqfooter-bottom">
-                <p style={{textAlign:"center"}}>
-                ©2018 Helperland. All rights reserved.  <a href="#">Terms and Conditions</a> | <a href="#">Privacy Policy </a>           
-                </p>
-            </div>
+            </footer>
         </>
     );
 }
