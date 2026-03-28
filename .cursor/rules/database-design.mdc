@@ -1,0 +1,500 @@
+---
+description: MongoDB database design and schema reference for Helperland/Working-Desk platform
+alwaysApply: true
+---
+
+# MongoDB Database Design — Helperland (Working-Desk)
+
+## Overview
+
+13 collections replacing the flat `db.json` file. Supports multi-role users (Customer, Service Provider, Admin), dynamic service categories (Fan, Cupboard, Bed, Ceiling, Cleaning, etc.), bookings, payments, reviews, and notifications.
+
+---
+
+## 1. `users`
+
+```js
+{
+  _id: ObjectId,
+  firstName: String,              // required
+  lastName: String,               // required
+  email: String,                  // required, unique, indexed
+  mobile: String,                 // required
+  password: String,               // bcrypt hashed, required
+  role: String,                   // enum: "customer" | "service_provider" | "admin"
+  status: String,                 // enum: "active" | "inactive" | "blocked"
+  avatar: String,                 // image URL or avatar code
+  gender: String,                 // enum: "male" | "female" | "other"
+  dateOfBirth: Date,
+  preferredLanguage: String,      // enum: "English" | "Hindi" | "Gujarati"
+
+  // Service Provider specific
+  bio: String,
+  experience: Number,             // years
+  serviceCategories: [ObjectId],  // → service_categories
+  serviceAreas: [String],         // postal codes they serve
+  averageRating: Number,          // denormalized, default 0
+  totalCompletedJobs: Number,     // denormalized, default 0
+  blockList: [ObjectId],          // → users (blocked customer IDs)
+
+  // SP address (embedded)
+  address: {
+    streetName: String,
+    houseNumber: String,
+    city: String,
+    postalCode: String,
+    state: String
+  },
+
+  // Security
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+  lastLoginAt: Date,
+
+  createdAt: Date,                // auto
+  updatedAt: Date                 // auto
+}
+// Indexes: { email: 1 } unique, { role: 1, status: 1 }, { serviceAreas: 1 }
+```
+
+---
+
+## 2. `service_categories`
+
+Top-level and sub-categories for all services offered.
+
+```js
+{
+  _id: ObjectId,
+  name: String,                   // "Fan Service", "Home Cleaning"
+  slug: String,                   // "fan-service" — unique, URL-friendly
+  description: String,
+  icon: String,                   // icon name or URL
+  image: String,                  // banner image URL
+  parentCategory: ObjectId,       // null = top-level, ObjectId = sub-category
+
+  basePrice: Number,              // price per hour in ₹
+  discountPercent: Number,        // default discount
+  estimatedDuration: Number,      // default hours
+
+  isActive: Boolean,              // default true
+  sortOrder: Number,              // display ordering
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { slug: 1 } unique, { parentCategory: 1 }, { isActive: 1 }
+```
+
+### Seed Categories
+
+| Parent Category | Sub-categories | Base ₹/hr |
+|---|---|---|
+| Home Cleaning | Room Cleaning, Kitchen Cleaning, Bathroom, Deep Clean | 500 |
+| Fan Service | Ceiling Fan Clean, Exhaust Fan Repair, Fan Installation | 300 |
+| Cupboard Service | Cupboard Cleaning, Organization, Wardrobe Deep Clean | 400 |
+| Bed Service | Mattress Cleaning, Bed Bug Treatment, Linen Change | 350 |
+| Ceiling Service | Ceiling Cleaning, Ceiling Painting, False Ceiling Repair | 600 |
+| Electrical Service | Wiring Repair, Switch/Socket Fix, Light Installation | 400 |
+| Plumbing Service | Pipe Repair, Tap Installation, Drain Cleaning | 450 |
+| AC Service | AC Cleaning, AC Repair, AC Gas Refill, AC Installation | 700 |
+| Appliance Repair | Washing Machine, Fridge, Microwave, Geyser | 500 |
+| Pest Control | Cockroach, Termite, Mosquito, Rodent | 800 |
+| Painting | Interior, Exterior, Texture Painting | 1000 |
+| Carpentry | Furniture Repair, Door Fix, Cabinet Making | 500 |
+
+---
+
+## 3. `services`
+
+Individual service items / add-ons within a category.
+
+```js
+{
+  _id: ObjectId,
+  categoryId: ObjectId,           // → service_categories
+  name: String,                   // "Inside Cabinet Cleaning"
+  description: String,
+  price: Number,                  // price for this item
+  priceType: String,              // enum: "per_hour" | "fixed" | "per_unit"
+  duration: Number,               // estimated minutes
+  isAddon: Boolean,               // true = optional extra service
+  isActive: Boolean,
+  image: String,
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { categoryId: 1 }, { isAddon: 1, isActive: 1 }
+```
+
+Replaces the hardcoded `ExtraService` object. Current extras become `isAddon: true` under Home Cleaning:
+- Inside Cabinets, Inside Fridge, Inside Oven, Laundry Wash & Dry, Interior Windows
+
+---
+
+## 4. `addresses`
+
+Customer/SP saved addresses.
+
+```js
+{
+  _id: ObjectId,
+  userId: ObjectId,               // → users
+  label: String,                  // "Home" | "Office" | "Other"
+  houseNumber: String,
+  streetName: String,
+  city: String,
+  state: String,
+  postalCode: String,
+  mobileNumber: String,
+  latitude: Number,               // for future map integration
+  longitude: Number,
+  isDefault: Boolean,             // default false
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { userId: 1 }, { postalCode: 1 }
+```
+
+---
+
+## 5. `bookings`
+
+Main booking/order collection — replaces `Bookservice`.
+
+```js
+{
+  _id: ObjectId,
+  bookingNumber: Number,          // auto-generated human-readable ID
+
+  // Participants
+  customerId: ObjectId,           // → users
+  serviceProviderId: ObjectId,    // → users (null until SP accepts)
+
+  // Service details
+  categoryId: ObjectId,           // → service_categories
+  selectedServices: [{
+    serviceItemId: ObjectId,      // → services
+    name: String,                 // denormalized
+    quantity: Number,
+    price: Number
+  }],
+
+  // Schedule
+  scheduledDate: Date,
+  scheduledTime: String,          // "10:30 AM"
+  serviceHours: Number,
+  totalTime: Number,              // including extras
+
+  // Location
+  serviceAddress: {
+    addressId: ObjectId,          // → addresses
+    fullAddress: String,          // denormalized display string
+    postalCode: String,
+    contactMobile: String
+  },
+
+  // Pricing
+  subtotal: Number,
+  discountPercent: Number,
+  discountAmount: Number,
+  couponId: ObjectId,             // → coupons
+  couponCode: String,
+  totalAmount: Number,            // final payable
+
+  // Metadata
+  comments: String,
+  hasPets: Boolean,
+  photos: [String],               // uploaded photo URLs
+
+  // Status lifecycle
+  status: String,                 // enum: "new" | "accepted" | "in_progress" |
+                                  //       "completed" | "cancelled" | "rescheduled"
+  statusHistory: [{
+    status: String,
+    changedBy: ObjectId,
+    reason: String,
+    timestamp: Date
+  }],
+
+  // Cancellation
+  cancellationReason: String,
+  cancelledBy: ObjectId,
+
+  // Reschedule
+  rescheduleNotes: String,
+  rescheduledFrom: { date: Date, time: String },
+
+  // Rating
+  rating: Number,                 // 1–5
+  review: String,
+  ratedAt: Date,
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { customerId: 1, status: 1 }, { serviceProviderId: 1, status: 1 },
+//          { "serviceAddress.postalCode": 1, status: 1 }, { scheduledDate: 1 },
+//          { bookingNumber: 1 } unique
+```
+
+---
+
+## 6. `payments`
+
+Payment transaction records (Razorpay integration).
+
+```js
+{
+  _id: ObjectId,
+  bookingId: ObjectId,            // → bookings
+  customerId: ObjectId,           // → users
+
+  orderId: String,                // Razorpay order ID
+  paymentId: String,              // Razorpay payment ID
+  signature: String,              // Razorpay signature
+
+  amount: Number,
+  currency: String,               // default "INR"
+  method: String,                 // "card" | "upi" | "netbanking" | "wallet" | "cod"
+  status: String,                 // "pending" | "completed" | "failed" | "refunded"
+
+  refundId: String,
+  refundAmount: Number,
+  refundReason: String,
+
+  metadata: Object,               // raw gateway response
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { bookingId: 1 }, { paymentId: 1 } unique, { customerId: 1 }
+```
+
+---
+
+## 7. `coupons`
+
+Discount coupon management (admin-created).
+
+```js
+{
+  _id: ObjectId,
+  code: String,                   // "WELCOME20" — unique, uppercase
+  discountPercent: Number,        // 1–100
+  maxDiscountAmount: Number,      // cap on discount
+  minOrderAmount: Number,         // minimum to apply
+  maxUsage: Number,               // total allowed uses
+  usedCount: Number,              // current uses
+  perUserLimit: Number,           // max per customer
+
+  applicableCategories: [ObjectId], // → service_categories (empty = all)
+
+  isActive: Boolean,
+  startsAt: Date,
+  expiresAt: Date,
+
+  createdBy: ObjectId,            // → users (admin)
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { code: 1 } unique, { isActive: 1, expiresAt: 1 }
+```
+
+---
+
+## 8. `coupon_usages`
+
+Tracks per-user coupon redemptions.
+
+```js
+{
+  _id: ObjectId,
+  couponId: ObjectId,             // → coupons
+  userId: ObjectId,               // → users
+  bookingId: ObjectId,            // → bookings
+  discountAmount: Number,
+  usedAt: Date
+}
+// Indexes: { couponId: 1, userId: 1 }
+```
+
+---
+
+## 9. `reviews`
+
+Separated review/rating collection for aggregation.
+
+```js
+{
+  _id: ObjectId,
+  bookingId: ObjectId,            // → bookings
+  customerId: ObjectId,           // → users (reviewer)
+  serviceProviderId: ObjectId,    // → users (reviewed)
+  categoryId: ObjectId,           // → service_categories
+
+  rating: Number,                 // 1–5
+  comment: String,
+
+  spReply: String,                // SP response
+  spRepliedAt: Date,
+
+  isVisible: Boolean,             // admin can hide
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { serviceProviderId: 1, rating: 1 }, { customerId: 1 }, { categoryId: 1 }
+```
+
+---
+
+## 10. `service_areas`
+
+Serviceable postal codes — replaces `postalCode` array.
+
+```js
+{
+  _id: ObjectId,
+  postalCode: String,             // "395010" — unique
+  city: String,                   // "Surat"
+  state: String,                  // "Gujarat"
+  isActive: Boolean,
+
+  availableCategories: [ObjectId], // → service_categories available here
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { postalCode: 1 } unique, { city: 1 }
+```
+
+---
+
+## 11. `notifications`
+
+Email/SMS/push notification log.
+
+```js
+{
+  _id: ObjectId,
+  userId: ObjectId,               // recipient → users
+  type: String,                   // "booking_confirmed" | "booking_accepted" |
+                                  // "booking_cancelled" | "payment_received" |
+                                  // "rating_received" | "password_reset"
+  title: String,
+  message: String,
+
+  channel: String,                // "email" | "sms" | "push" | "in_app"
+  status: String,                 // "sent" | "delivered" | "failed" | "read"
+
+  relatedBookingId: ObjectId,
+  metadata: Object,               // email subject, SMS sid, etc.
+
+  readAt: Date,
+  createdAt: Date
+}
+// Indexes: { userId: 1, readAt: 1 }, { createdAt: -1 }
+```
+
+---
+
+## 12. `faqs`
+
+Frequently asked questions (admin-managed).
+
+```js
+{
+  _id: ObjectId,
+  question: String,
+  answer: String,
+  categoryId: ObjectId,           // optional → service_categories
+  sortOrder: Number,
+  isActive: Boolean,
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { isActive: 1, sortOrder: 1 }
+```
+
+---
+
+## 13. `blocked_customers`
+
+SP-to-customer block relationships — replaces `Block-user`.
+
+```js
+{
+  _id: ObjectId,
+  serviceProviderId: ObjectId,    // → users (SP who blocked)
+  customerId: ObjectId,           // → users (blocked customer)
+  reason: String,
+
+  createdAt: Date,
+  updatedAt: Date
+}
+// Indexes: { serviceProviderId: 1, customerId: 1 } unique compound
+```
+
+---
+
+## Entity Relationships
+
+```
+users 1──N addresses
+users 1──N bookings (as customer)
+users 1──N bookings (as service_provider)
+users N──M service_categories (SP skills)
+users 1──N blocked_customers (as SP)
+users 1──N notifications
+
+service_categories 1──N services
+service_categories 1──N service_categories (parent → child)
+service_categories N──M service_areas
+
+bookings 1──1 payments
+bookings 1──1 reviews
+bookings N──1 service_categories
+bookings N──1 coupons → coupon_usages
+
+faqs N──1 service_categories (optional)
+```
+
+---
+
+## Migration: db.json → MongoDB
+
+| Old (`db.json`) | New (MongoDB) |
+|---|---|
+| `user[]` | `users` |
+| `postalCode[]` | `service_areas` |
+| `Bookservice[]` | `bookings` + `payments` |
+| `Address[]` | `addresses` |
+| `Block-user[]` | `blocked_customers` |
+| `coupon[]` | `coupons` + `coupon_usages` |
+| `faq[]` | `faqs` |
+| Hardcoded extras | `service_categories` + `services` |
+| *(none)* | `reviews`, `notifications`, `payments` |
+
+---
+
+## Collection Summary
+
+| # | Collection | Replaces | Purpose |
+|---|---|---|---|
+| 1 | `users` | `user` array | All user accounts with role-based fields |
+| 2 | `service_categories` | *(new)* | Fan, Cupboard, Bed, Ceiling, Cleaning, etc. |
+| 3 | `services` | Hardcoded `ExtraService` | Individual service items/add-ons per category |
+| 4 | `addresses` | `Address` array | User saved addresses |
+| 5 | `bookings` | `Bookservice` array | Service booking orders |
+| 6 | `payments` | *(new)* | Payment transactions (Razorpay) |
+| 7 | `coupons` | `coupon` (inline) | Discount codes |
+| 8 | `coupon_usages` | *(new)* | Track per-user coupon usage |
+| 9 | `reviews` | Rating field on booking | Dedicated rating and review system |
+| 10 | `service_areas` | `postalCode` array | Serviceable postal codes with city/state |
+| 11 | `notifications` | *(new)* | Email/SMS/push notification log |
+| 12 | `faqs` | `faq` (inline) | Frequently asked questions |
+| 13 | `blocked_customers` | `Block-user` / `BlockList` | SP-to-customer block relationships |

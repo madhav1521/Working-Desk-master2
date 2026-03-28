@@ -4,37 +4,59 @@ import Banner from "../components/banner";
 import Blog from "../components/blog";
 import Customer from "../components/customer";
 import Services from "../components/services";
+import ServiceCategories from "../components/ServiceCategories";
+import StatsSection from "../components/StatsSection";
+import ServicePartnerCTA from "../components/ServicePartnerCTA";
 import { Helmet } from "react-helmet";
-import { Container } from "@mui/material";
 import { useParams } from "react-router-dom";
 import Resetpass from "../components/resetpassDialoge";
 import { useEffect, useState } from "react";
 
 function Homepage() {
-    // const dispatch=useDispatch();
-    const [open,setopen]=useState(false);
-    let { token }=useParams();
-    useEffect(()=>{
-        console.log("token",token)
-        if(token){
+    const [open, setopen] = useState(false);
+    let { token } = useParams();
+
+    useEffect(() => {
+        if (token) {
             setopen(true);
         }
-    },[token])
-    
-  
-    
+    }, [token]);
+
     return (
-        <> 
+        <>
             <Helmet>
-                <title>Homepage</title>
+                <title>Helperland — Professional Home Services</title>
             </Helmet>
-            <NavbarComponent ></NavbarComponent>
-            <Banner></Banner>
-            <Services></Services>
-            <Blog></Blog>
-            <Customer></Customer>
-            <Footer></Footer>
-            <Resetpass token={token} open={open}></Resetpass>
+
+            {/* Fixed Navbar */}
+            <NavbarComponent />
+
+            {/* Hero Banner + How It Works */}
+            <Banner />
+
+            {/* Service Categories Grid */}
+            <ServiceCategories />
+
+            {/* Stats / About section */}
+            <StatsSection />
+
+            {/* Why Choose Us — existing section */}
+            <Services />
+
+            {/* Customer Reviews */}
+            <Customer />
+
+            {/* Blog Section */}
+            <Blog />
+
+            {/* Become Our Service Partner CTA */}
+            <ServicePartnerCTA />
+
+            {/* Footer */}
+            <Footer />
+
+            {/* Reset Password Dialog */}
+            <Resetpass token={token} open={open} />
         </>
     );
 }

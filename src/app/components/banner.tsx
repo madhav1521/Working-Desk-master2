@@ -1,85 +1,103 @@
-import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
-import {group18,check,step1,step2,step3,step4,steparrow1,steparrow2} from "../assets/images"
-import Login from "./loginmenu";
+import React from "react";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const quickServices = [
+    { icon: "🧹", label: "Home Cleaning" },
+    { icon: "🛋️", label: "Sofa Cleaning" },
+    { icon: "🌀", label: "Fan Service" },
+    { icon: "❄️", label: "AC Service" },
+    { icon: "🐛", label: "Pest Control" },
+    { icon: "🔧", label: "Plumbing" },
+];
+
 function Banner() {
-      function login()
-      {
-          toast('please login')
-      }
+    function handleBook() {
+        if (!localStorage.getItem("user")) {
+            toast("Please login to book a service!");
+        }
+    }
+
     return (
         <>
-            <div className="Banner">
-                <h1>Do not feel like housework?</h1>
-                <ul>
-                    <li>
-                        <img src={check} alt="logo"/>
-                        <p>cirtified & insured helper</p>
-                    </li>
-                    <li>
-                        <img src={check} alt="logo"/>
-                        <p>easy booking procedure</p>
-                    </li>
-                    <li>
-                        <img src={check} alt="logo"/>
-                        <p>friendly customer service</p>
-                    </li>
-                    <li>
-                        <img src={check} alt="logo"/>
-                        <p>secure online payment method</p>
-                    </li>
-                </ul>
-                <div className="btn1">
-                    <Button onClick={login} style={{textTransform:'capitalize'}}> Let’s Book a Work</Button>
+            <div className="hero-banner">
+                <div className="hero-overlay"></div>
+                <div className="hero-content">
+                    <p className="hero-badge">⭐ Trusted by 10,000+ Happy Customers</p>
+                    <h1 className="hero-title">
+                        Professional Home Services<br />
+                        <span className="hero-title-accent">You Can Trust</span>
+                    </h1>
+                    <p className="hero-subtitle">
+                        Expert home cleaning, fan service, AC repair, pest control &amp; more —
+                        available at your doorstep. Book online in minutes.
+                    </p>
+
+                    <div className="hero-features">
+                        <span className="hero-feature-item">✓ Certified &amp; Insured Experts</span>
+                        <span className="hero-feature-item">✓ Easy Online Booking</span>
+                        <span className="hero-feature-item">✓ Secure Payment</span>
+                        <span className="hero-feature-item">✓ 24/7 Customer Support</span>
+                    </div>
+
+                    <div className="hero-actions">
+                        <Link to="/bookservice">
+                            <Button className="hero-book-btn" onClick={handleBook}>
+                                Book Now
+                            </Button>
+                        </Link>
+                        <Link to="/prices">
+                            <Button className="hero-prices-btn">
+                                View Prices
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <div className="hero-quick-services">
+                        {quickServices.map((s) => (
+                            <Link to="/bookservice" key={s.label}>
+                                <div className="hero-quick-card">
+                                    <span className="hero-quick-icon">{s.icon}</span>
+                                    <span className="hero-quick-label">{s.label}</span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
-                
-                <div className="symbol">
-                <Grid container>
-                    <Grid item lg={2} md={2} sm={6} xs={12}>
-                    <div className="subsymbol">
-                        <img src={step1} alt="logo" />
-                        <p style={{}}>Enter your postcode</p>
+            </div>
+
+            <div className="how-it-works">
+                <h2 className="hiw-title">How It Works</h2>
+                <div className="hiw-steps">
+                    <div className="hiw-step">
+                        <div className="hiw-step-num">1</div>
+                        <div className="hiw-step-icon">📍</div>
+                        <h3>Enter Postcode</h3>
+                        <p>We check service availability in your area instantly.</p>
                     </div>
-                    </Grid>
-                    <div className="arrow-vertical">
-                        <img src={steparrow1}  className="arrow" alt="logo"/>
+                    <div className="hiw-arrow">→</div>
+                    <div className="hiw-step">
+                        <div className="hiw-step-num">2</div>
+                        <div className="hiw-step-icon">📋</div>
+                        <h3>Select Your Plan</h3>
+                        <p>Choose service type, date, time and add-ons.</p>
                     </div>
-                   
-                    
-                    <Grid item lg={2} md={2} sm={6} xs={12} >
-                    <div className="subsymbol">
-                        <img src={step2} alt="logo"/>
-                        <p style={{}}>Select your plan</p>
+                    <div className="hiw-arrow">→</div>
+                    <div className="hiw-step">
+                        <div className="hiw-step-num">3</div>
+                        <div className="hiw-step-icon">💳</div>
+                        <h3>Pay Securely</h3>
+                        <p>Safe online payment via Razorpay. No hidden charges.</p>
                     </div>
-                    </Grid>
-                    <div className="arrow-vertical">
-                        <img src={steparrow2} className="arrow" alt="logo"/>
+                    <div className="hiw-arrow">→</div>
+                    <div className="hiw-step">
+                        <div className="hiw-step-num">4</div>
+                        <div className="hiw-step-icon">🏠</div>
+                        <h3>Enjoy the Service</h3>
+                        <p>A vetted professional arrives at your door on time.</p>
                     </div>
-                    
-                    
-                    <Grid item lg={2} md={2} sm={6} xs={12}>
-                    <div className="subsymbol">
-                        <img src={step3} alt="logo"/>
-                        <p style={{}}>Pay securely online</p>
-                    </div>
-                    </Grid>
-                    <div className="arrow-vertical">
-                        <img src={steparrow1} className="arrow" alt="logo"/>
-                    </div>
-                    
-                    <Grid item lg={2} md={2} sm={6} xs={12}>
-                    <div className="subsymbol">
-                        <img src={step4} alt="logo" />
-                        <p>Enjoy amazing service</p>
-                    </div>
-                    </Grid>
-                </Grid>
                 </div>
-                <div className="downarrow">
-                    <a href="#"><img src={group18} alt="logo" /></a>
-                </div>
-                
             </div>
         </>
     );

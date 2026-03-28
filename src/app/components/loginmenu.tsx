@@ -1,242 +1,296 @@
-import { Button, Checkbox, TextField,Alert, Modal, Box  } from "@mui/material";
+import React, { useState } from 'react';
+import {
+  Button, TextField, Modal, Box, CircularProgress, InputAdornment, IconButton, Alert,
+} from '@mui/material';
+import { Visibility, VisibilityOff, Email as EmailIcon, Lock as LockIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
-import { useHistory  } from "react-router-dom";
-import { Loginvalidation } from "../validation/validation";
-import { toast, ToastContainer } from "react-toastify";
-import emailjs from 'emailjs-com';
+import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { login, forgotPassword } from '../services/auth.service';
+import { useAuth } from '../context/AuthContext';
 
-const CustomTextField1 = styled(TextField)({
-   
-   '& .MuiOutlinedInput-root':{
-       height:"46px",
-       width:"286px",
-       margin:"10px auto",
-   },
-   '& .MuiOutlinedInput-input':{
-       padding:"11px 14px"
-   }
+// ─── Styled Components ────────────────────────────────────────────────────────
+const CButton = styled(Button)(({ theme }) => ({
+  height: '40px',
+  width: '97px',
+  fontSize: '17px',
+  borderRadius: '20px',
+  lineHeight: '24px',
+  color: '#FFFFFF',
+  border: '1px solid #FFFFFF',
+  textTransform: 'capitalize',
+  marginRight: '11px',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    backgroundColor: '#FFFFFF',
+    color: 'black',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+  },
+}));
 
+const StyledInput = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    height: '50px',
+    width: '100%',
+    borderRadius: '10px',
+    transition: 'all 0.2s ease',
+    '&:hover fieldset': { borderColor: '#1D7A8C' },
+    '&.Mui-focused fieldset': { borderColor: '#1D7A8C', borderWidth: '2px' },
+  },
 });
 
+const LoginButton = styled(Button)({
+  width: '100%',
+  height: '50px',
+  background: 'linear-gradient(135deg, #1D7A8C 0%, #146371 100%)',
+  borderRadius: '25px',
+  color: '#FFFFFF',
+  fontSize: '16px',
+  fontWeight: 600,
+  marginTop: '8px',
+  textTransform: 'none',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    background: 'linear-gradient(135deg, #146371 0%, #0f4f5c 100%)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 6px 20px rgba(29, 122, 140, 0.4)',
+  },
+  '&:disabled': { opacity: 0.7, transform: 'none' },
+});
 
-const CButton = styled(Button)({
+const modalStyle = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: { xs: '90%', sm: 420 },
+  bgcolor: 'background.paper',
+  borderRadius: '20px',
+  boxShadow: '0 24px 60px rgba(0,0,0,0.15)',
+  p: 4,
+  outline: 'none',
+};
 
-    height: "40px",
-    width: "97px",
-    fontSize: "17px",
-    borderRadius: "20px",
-    lineHeight: "24px",
-    color:" #FFFFFF",
-    border: "1px solid #FFFFFF",
-    textTransform: "capitalize",
-    marginRight:" 11px",
-    '&:hover': {
-        backgroundColor: "#FFFFFF",
-        color:"black"
+function Login(props: any) {
+  const history = useHistory();
+  const { setAuth } = useAuth();
+
+  const [formdata, setFormdata] = useState({ Email: '', Password: '' });
+  const [resetEmail, setResetEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
+  const [open, setOpen] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormdata({ ...formdata, [e.target.name]: e.target.value });
+    setFormError('');
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formdata.Email || !formdata.Password) {
+      setFormError('Please fill in all fields');
+      return;
     }
-});
-const CustomTextField2 = styled(TextField)({
-   
-    '& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root':{
-        height:"46px",
-        width:"286px",
-        margin:"10px 17px"
-    },
- //    '@media(max-width:380px)':{
- //     '& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root':{
- //       width:"300px" 
- //     }
- // }
- });
-const CustomButton1 = styled(Button)({
 
-    width: "125px",
-    height: "46px",
-    background: "#1D7A8C 0% 0% no-repeat padding-box",
-    borderRadius: "23px",
-    color:"#FFFFFF",
-    fontSize:"16px",
-    margin:"10px auto",
-    textTransform:"capitalize",
-    '&:hover': {
-        backgroundColor: "#525252"
+    setLoading(true);
+    setFormError('');
+    try {
+      const result = await login(formdata);
+      setAuth(result.user, result.token);
+      setOpen(false);
+      toast.success(`Welcome back, ${result.user.FirstName}!`, { position: 'top-center' });
+      const { userTypeId } = result.user;
+      if (userTypeId === 0) history.push('/history');
+      else if (userTypeId === 1) history.push('/upcoming');
+      else history.push('/srequest');
+    } catch (err: any) {
+      setFormError(err.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-});
+  };
 
-
-const CustomButton = styled(Button)({
-
-    width: "125px",
-    height: "46px",
-    background: "#1D7A8C",
-    borderRadius: "23px",
-    color:"#FFFFFF",
-    fontSize:"16px",
-    margin:"10px auto",
-    textTransform:"capitalize",
-    '&:hover': {
-        backgroundColor: "#525252"
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) {
+      setResetError('Please enter your email address');
+      return;
     }
-});
-const CustomCheckbox = styled(Checkbox)({
-
-    '& .MuiSvgIcon-root':{
-        fill: "#C8C8C8",
+    setResetLoading(true);
+    setResetError('');
+    setResetSuccess('');
+    try {
+      const result = await forgotPassword(resetEmail);
+      setResetSuccess(result.message || 'Password reset link sent to your email!');
+      toast.success('Reset email sent!', { position: 'top-center' });
+    } catch (err: any) {
+      setResetError(err.message || 'Failed to send reset email');
+    } finally {
+      setResetLoading(false);
     }
-});
+  };
 
-function Login(props:any) {
-           const history=useHistory ();
-            const [formdata,setformdata]=useState({
-                Email:"",
-                Password:"",
-            })
-            const [resetEmail,setreset]=useState("");
-            const [checkboxdata,setcheckboxdata]=useState({
-               newslattercheck:false,
-               termcheck:false
-            })
-            const handleChange = (e:any) =>{
-                const name= e.target.name;
-                const value=e.target.value.toString();
-                setformdata({...formdata,[name]:value})
-                console.log(value)
-            }
-            const submitform1 = (e:any) =>{
-                e.preventDefault();
-                let a={Email:resetEmail}
-                fetch(`http://localhost:5000/account/forgotpassword/`,{
-                    method:"POST",
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                      },
-                body:JSON.stringify(a)
-                }).then(res=>res.json()).then(res =>{
-                    console.log(res)
-                    if(res=="Sent"){
-                        toast.success(res,{position: "top-center"});
-                    }
-                    else
-                        toast.error(res,{position: "top-center"});
-                }).catch(e=>console.log(e))
-                
-            }
-            const submitform = (e:React.FormEvent<HTMLFormElement>) =>{
-                e.preventDefault()
-                const error=Loginvalidation(formdata)
-                console.log(error)
-                if(error.length == 0){
-                    let data={...formdata}
-                    fetch(`http://localhost:5000/user?q=${data.Email}`,{
-                        method:"GET",
-                        headers: {
-                            "Content-type": "application/json; charset=UTF-8"
-                          },
-                    }).then(res=>res.json()).then(res =>{
-                        console.log(res)
-                        if(res.length==0){
-                            toast.error("Email Address is not exist please register",{position: "top-center"});
-                        }
-                        else if(res[0].status=="Inactive"){
-                            toast.error("Account is Not activated",{position: "top-center"});
-                        }
-                        else if(res[0].Password != data.Password){
-                            
-                            console.log("Details are not valid")
-                            toast.error("Details are not valid",{position: "top-center"});
-                        }
-                        else{
-                            if(res[0].userTypeId == 0){
-                                // props.handelClose();
-                                let a={...data,userTypeId:res[0].userTypeId}
-                                localStorage.setItem("user",JSON.stringify(a)); 
-                                history.push("/history")
-                            }
-                            else if(res[0].userTypeId ==1){
-                                let a={...data,userTypeId:res[0].userTypeId}
-                                localStorage.setItem("user",JSON.stringify(a)); 
-                                history.push("/upcoming");
-                            }
-                            else{
-                                let a={...data,userTypeId:res[0].userTypeId}
-                                localStorage.setItem("user",JSON.stringify(a)); 
-                                history.push("/srequest");
-                            }
-                        }
-                        
-                    }).catch(e=>console.log(e))
-                      
-                }
-                else{
-                    
-                    toast.error("Please fill all the details",{position: "top-center"});
-                }
-            }
-            const [open, setOpen] = React.useState(false);
-            const handleOpen = () => setOpen(true);
-            const handleClose = () => setOpen(false);
+  return (
+    <>
+      <CButton
+        className="login-btn"
+        style={{ background: props.background }}
+        onClick={() => setOpen(true)}
+      >
+        Login
+      </CButton>
 
-            const [open1, setOpen1] = React.useState(false);
-            const handleOpen1 = () => {
-                setOpen1(true)
-                setOpen(false)
-            };
-            const handleClose1 = () => {
-                setOpen1(false)
-                setOpen(true)
-            };
-    return (
-        <>
-        <CButton className="login-btn"  style={{background:props.background}}onClick={handleOpen}>Login</CButton>
-            
-            <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box className="login-box">
-                <form className="loginmenu"  onSubmit={submitform} method="get">
-                    {/* {alertt.showAlert ? <AlertMenu/> : null} */}
-                    <h1>Login to Your account</h1>
-                    <CustomTextField1  placeholder="Email Address" 
-                    onChange={handleChange} value={formdata.Email}
-                    name="Email" />
-                    <CustomTextField1  placeholder="Password"  type="Password" 
-                    name="Password" onChange={handleChange} value={formdata.Password}/>
-                    <div className="remember">
-                        <CustomCheckbox style={{padding:"0px"}}/>
-                        <p>Remember me</p>
-                    </div>
-                    <CustomButton type="submit" onClick={e => {document.body.classList.remove('login-open')}}>Login</CustomButton>
-                    <h2 onClick={handleOpen1}
-                    >Forgot Password?</h2>
-                    <h3>Don't have an account? <Link to="/uregistration">Create an account</Link></h3>
-                </form>
+      {/* ─── Login Modal ─── */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box sx={modalStyle}>
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box sx={{
+              width: 56, height: 56, borderRadius: '50%',
+              background: 'linear-gradient(135deg, #1D7A8C, #146371)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 12px',
+            }}>
+              <LockIcon sx={{ color: '#fff', fontSize: 28 }} />
             </Box>
-          </Modal>
-          <Modal
-            open={open1}
-            onClose={handleClose1}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box className="forgot-box">
-                <form className="forgot-password" onSubmit={submitform1}>
-                    <h1>Forgot password</h1>
-                    <CustomTextField2  placeholder="Email Address" value={resetEmail} type="email" name="Email" onChange={(e)=>setreset(e.target.value)} />
-                    <CustomButton1 type="submit">Send</CustomButton1>
-                    <a href="#" onClick={()=>{handleClose1();}}
-                        type="submit">Login now</a>
-                </form>
+            <h2 style={{ margin: 0, color: '#2c3e50', fontSize: '24px', fontWeight: 700 }}>
+              Welcome Back
+            </h2>
+            <p style={{ color: '#888', marginTop: 4, fontSize: '14px' }}>
+              Sign in to your Helperland account
+            </p>
+          </Box>
+
+          <form onSubmit={handleLogin} noValidate>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {formError && (
+                <Alert severity="error" sx={{ borderRadius: '10px' }}>
+                  {formError}
+                </Alert>
+              )}
+              <StyledInput
+                placeholder="Email address"
+                name="Email"
+                type="email"
+                value={formdata.Email}
+                onChange={handleChange}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ color: '#1D7A8C' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <StyledInput
+                placeholder="Password"
+                name="Password"
+                type={showPassword ? 'text' : 'password'}
+                value={formdata.Password}
+                onChange={handleChange}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon sx={{ color: '#1D7A8C' }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword((s) => !s)} edge="end" size="small">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Box sx={{ textAlign: 'right', mt: -1 }}>
+                <span
+                  onClick={() => { setOpen(false); setForgotOpen(true); }}
+                  style={{ color: '#1D7A8C', cursor: 'pointer', fontSize: '14px', fontWeight: 500 }}
+                >
+                  Forgot Password?
+                </span>
+              </Box>
+
+              <LoginButton type="submit" disabled={loading}>
+                {loading ? <CircularProgress size={22} color="inherit" /> : 'Sign In'}
+              </LoginButton>
+
+              <p style={{ textAlign: 'center', color: '#888', margin: '8px 0 0', fontSize: '14px' }}>
+                Don't have an account?{' '}
+                <Link to="/uregistration" style={{ color: '#1D7A8C', fontWeight: 600 }}
+                  onClick={() => setOpen(false)}>
+                  Create account
+                </Link>
+              </p>
             </Box>
-          </Modal>
-            <ToastContainer/>
-        {/* </Container> */}
-        </>
-    );
+          </form>
+        </Box>
+      </Modal>
+
+      {/* ─── Forgot Password Modal ─── */}
+      <Modal open={forgotOpen} onClose={() => { setForgotOpen(false); setResetError(''); setResetSuccess(''); }}>
+        <Box sx={modalStyle}>
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <h2 style={{ margin: 0, color: '#2c3e50', fontSize: '22px', fontWeight: 700 }}>
+              Reset Password
+            </h2>
+            <p style={{ color: '#888', fontSize: '14px', marginTop: 6 }}>
+              Enter your email and we'll send you a reset link
+            </p>
+          </Box>
+
+          <form onSubmit={handleForgotPassword} noValidate>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {resetError && <Alert severity="error" sx={{ borderRadius: '10px' }}>{resetError}</Alert>}
+              {resetSuccess && <Alert severity="success" sx={{ borderRadius: '10px' }}>{resetSuccess}</Alert>}
+
+              <StyledInput
+                placeholder="Email address"
+                type="email"
+                value={resetEmail}
+                onChange={(e) => { setResetEmail(e.target.value); setResetError(''); }}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ color: '#1D7A8C' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <LoginButton type="submit" disabled={resetLoading || !!resetSuccess}>
+                {resetLoading ? <CircularProgress size={22} color="inherit" /> : 'Send Reset Link'}
+              </LoginButton>
+
+              <p style={{ textAlign: 'center', margin: 0 }}>
+                <span
+                  onClick={() => { setForgotOpen(false); setOpen(true); setResetError(''); setResetSuccess(''); }}
+                  style={{ color: '#1D7A8C', cursor: 'pointer', fontSize: '14px', fontWeight: 500 }}
+                >
+                  Back to Login
+                </span>
+              </p>
+            </Box>
+          </form>
+        </Box>
+      </Modal>
+
+      <ToastContainer />
+    </>
+  );
 }
 
 export default Login;

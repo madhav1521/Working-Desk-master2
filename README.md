@@ -44,3 +44,25 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+Customers (userTypeId: 0)
+ID	Name	Email	Password	Status
+1	Ritul Bathani	abc@gmail.com	qwert	Active
+7	ram patoliya	ram@gmail.com	asdfg	Active
+8	Madhav Jajal	madhavjajal1521@gmail.com	123	Active
+9	Madhav Jajal	madhavjajal1509@gmail.com	147	Active
+18	uttam uttam	uttam@gmail.com	123123	Active
+19	yash yash	yash@gmail.com	143143	Active
+Service Providers (userTypeId: 1)
+ID	Name	Email	Password	Status	Profile Complete?
+2	mahesh patel	pqr@yopmail.com	qwert	Active	Yes (PostalCode: 395010)
+3	haresh sharma	pqr@gmail.com	qwert	Inactive	No
+5	Ramesh Gandhi	ramesh1234@gmail.com	ritul	Inactive	No
+6	mohan1 sharma	mohan@gmail.com	qwert	Active	No
+20	madhav jajal	madhav@gmail.com	123	Inactive	No
+21	madhav jajal	abc@abc	141	Active	Yes (PostalCode: 364290)
+22	uttam uttam	uttam@gmail.com	123123	Active	No
+Admin (userTypeId: 2)
+ID	Name	Email	Password	Status
+4	admin admin	xyz@gmail.com	qwert	Active

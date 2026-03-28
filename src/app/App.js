@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Homepage from './pages/homepage';
@@ -15,6 +15,8 @@ import ServiceRequest from './pages/servicerequest';
 import Bookservicepage from './pages/book-service';
 import UserRegistration from './pages/user-registration';
 import Umanagement1 from './components/user-management';
+import AIChatWidget from './components/AIChatWidget';
+import BookingHistory from './components/ServiceCatalog/BookingHistory';
 
 function App() {
   const theme = createTheme({
@@ -44,7 +46,6 @@ function App() {
 
   return (
     <>
-
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
@@ -61,11 +62,14 @@ function App() {
              <Route path="/srequest" component={ServiceRequest}/>
              <Route path="/management" component={Umanagement1}></Route> 
              <Route path="/bookservice" component={Bookservicepage}></Route>
+             <Route path="/mybookings" component={BookingHistory}></Route>
              <Route path="/homepage" component={Homepage}></Route>
              <Route path="/uregistration" component={UserRegistration}></Route>
-             
             <Route path="/" exact component={Homepage}></Route>
           </Switch>
+
+          {/* Global AI Chat Widget — visible on every page */}
+          <AIChatWidget />
         </BrowserRouter>
       </ThemeProvider>
     </>

@@ -1,87 +1,131 @@
-import { Button, Checkbox, TextField } from "@mui/material";
-import React,{useEffect, useState} from "react";
-import { styled } from '@mui/material/styles';
-import {logolarge} from "../assets/images";
+import React, { useState } from "react";
+import { Button } from "@mui/material";
+import { logolarge } from "../assets/images";
 import SelectLabels from "./langauge";
-import { Link } from "react-router-dom";
-import Login from "./loginmenu"
-import { useHistory  } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-const Book= () => <Link to="/bookservice"></Link>
+import { Link, NavLink } from "react-router-dom";
+import Login from "./loginmenu";
+import { useHistory } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function NavbarComponent(props:any) {
-    const history=useHistory ();
-    function Logout(){
-        localStorage.clear();
+function NavbarComponent(props: any) {
+    const history = useHistory();
+
+    function Logout() {
+        localStorage.removeItem("user");
+        localStorage.removeItem("helperland_user");
         history.push("/");
-      }
-    function login()
-    {
-        toast("please Login!");
     }
 
-    const [navbar, setNavbar] =  useState(false);
+    const [navbar, setNavbar] = useState(false);
     const changeBackground = () => {
-      if(window.scrollY>=200) {
-        setNavbar(true);
-      }else {
-        setNavbar(false);
-      }
+        if (window.scrollY >= 80) {
+            setNavbar(true);
+        } else {
+            setNavbar(false);
+        }
     };
-    window.addEventListener('scroll' ,changeBackground);
+    window.addEventListener("scroll", changeBackground);
+
+    const closeSidebar = () => {
+        document.body.classList.remove("sidebar-open");
+    };
 
     return (
         <>
-        {/* <Container fluid> */}
-        
-            <nav className={navbar ? 'navbar active' : 'navbar'}>
-                <img src={logolarge} alt="logo" className="logo"/>
-                <ul className="topnav" >
-                  <Link to="/bookservice"><li><Button title="Book a cleaner" className="cleaner-btn">Book a worker</Button></li></Link>
-                        
-                    <li><Link to="/prices">Prices</Link></li>
-                    {/* <li><Link to="/prices">Our Guarantee</Link></li> */}
-                    <li><Link to="/about">Blog</Link></li>
-                    <li><Link to="/contact">Contact us</Link></li>
-                    {
-                    localStorage.getItem('user')?
-                        <li><Button className="login-btn"  onClick={Logout}>LogOut</Button></li>
-                    :
-                    
-                    <Login/>
-                    }
-                    
-                    <Link to="./pro"><li><Button className="cleaner-btn" >Become a Helper</Button></li></Link>
-                    <li className="selectlabel"><SelectLabels/></li>
-                    
+            <nav className={navbar ? "navbar active" : "navbar"}>
+                <Link to="/" onClick={closeSidebar}>
+                    <img src={logolarge} alt="logo" className="logo" />
+                </Link>
+
+                <ul className="topnav">
+                    <li>
+                        <NavLink exact to="/" activeClassName="nav-active" onClick={closeSidebar}>
+                            Home
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/bookservice" activeClassName="nav-active" onClick={closeSidebar}>
+                            Services
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/bookservice" activeClassName="nav-active" onClick={closeSidebar}>
+                            Booking
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/contact" activeClassName="nav-active" onClick={closeSidebar}>
+                            Contact
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/about" activeClassName="nav-active" onClick={closeSidebar}>
+                            Blog
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/prices" activeClassName="nav-active" onClick={closeSidebar}>
+                            Prices
+                        </NavLink>
+                    </li>
+
+                    {(localStorage.getItem("user") || localStorage.getItem("helperland_user")) ? (
+                        <>
+                            <li>
+                                <NavLink to="/mybookings" activeClassName="nav-active" onClick={closeSidebar}>
+                                    My Bookings
+                                </NavLink>
+                            </li>
+                            <li>
+                                <Button className="nav-outline-btn" onClick={Logout}>
+                                    LogOut
+                                </Button>
+                            </li>
+                        </>
+                    ) : (
+                        <Login />
+                    )}
+
+                    <li>
+                        <Link to="/pro" onClick={closeSidebar}>
+                            <Button className="nav-partner-btn">
+                                Become Our Service Partner
+                            </Button>
+                        </Link>
+                    </li>
+
+                    <li className="selectlabel">
+                        <SelectLabels />
+                    </li>
                 </ul>
-                
-                {/* <div><img src={navbutton} alt="logo" className="navbutton icon" onClick={}/></div> */}
-                <div className="toggel" onClick={e => {document.body.classList.toggle('sidebar-open')}} >
+
+                <div
+                    className="toggel"
+                    onClick={() => document.body.classList.toggle("sidebar-open")}
+                >
                     <span className="toggele-line"></span>
                     <span className="toggele-line"></span>
                     <span className="toggele-line"></span>
                 </div>
-                
             </nav>
-            <div className="overlay-navbar" onClick={e => {document.body.classList.toggle('sidebar-open')}}></div>
-            
-            
+
+            <div
+                className="overlay-navbar"
+                onClick={() => document.body.classList.remove("sidebar-open")}
+            ></div>
+
             <ToastContainer
-               position="top-center"
-               autoClose={5000}
-               hideProgressBar={false}
-               newestOnTop={false}
-               closeOnClick
-               rtl={false}
-               pauseOnFocusLoss
-               draggable
-               pauseOnHover
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
             />
-            {/* <div className="overlay-navbar" onClick={e => {document.body.classList.toggle('login-open')}}></div>
-            <div className="overlay-navbar" onClick={e => {document.body.classList.toggle('forgot-open')}}></div> */}
-        {/* </Container> */}
         </>
     );
 }

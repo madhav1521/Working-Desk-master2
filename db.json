@@ -50,7 +50,7 @@
     {
       "FirstName": "admin",
       "LastName": "admin",
-      "Email": "xyz@gmail.com",
+      "Email": "admin@gmail.com",
       "Mobile": "9876543210",
       "Password": "qwert",
       "userTypeId": 2,

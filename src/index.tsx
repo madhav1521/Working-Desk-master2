@@ -4,13 +4,16 @@ import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import { store } from './app/components/bookservicetab/store';
+import { AuthProvider } from './app/context/AuthContext';
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
-    </Provider>,
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </Provider>,
   document.getElementById('root')
 );
 
